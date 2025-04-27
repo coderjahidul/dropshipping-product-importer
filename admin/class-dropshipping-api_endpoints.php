@@ -6,6 +6,11 @@ function dropshipping_api_endpoints() {
         'methods' => 'GET',
         'callback' => 'call_fetch_product',
     ) );
+
+    register_rest_route( 'dropshipping/v1', '/import_product', array(
+        'methods' => 'GET',
+        'callback' => 'dropshipping_product_import_in_db',
+    ));
 }
 
 function call_fetch_product() {

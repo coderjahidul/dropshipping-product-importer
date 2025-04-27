@@ -128,6 +128,11 @@ class Dropshipping_Product_Importer {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-fetch-product-for-dropshipping-api.php';
 
 		/**
+		 * The class responsible for defining all actions that occur in the dropshipping product import in db.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-dropshipping-product-import-in-db.php';
+
+		/**
 		 * The class responsible for defining all actions that occur in the dropshipping api endpoints.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-dropshipping-api_endpoints.php';
