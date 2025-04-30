@@ -55,15 +55,10 @@ function dropshipping_product_import_in_db() {
                 // Update existing product (same as before)
                 $wc_product = wc_get_product($existing_product_id);
                 $wc_product->set_regular_price($product_price);
-                // Apply discount if percentage > 0
+
+                // Set sale price if discount
                 if ($dpi_discount_percentage > 0) {
-                    // Calculate the discounted price
-                    $product_discount_price = $product_price - ($product_price * $dpi_discount_percentage / 100);
-
-                    // Optionally round to 2 decimal places
-                    $product_discount_price = round($product_discount_price, 2);
-
-                    // Set the sale price for the product
+                    $product_discount_price = round($product_price - ($product_price * $dpi_discount_percentage / 100), 2);
                     $wc_product->set_sale_price($product_discount_price);
                 }
 
@@ -181,7 +176,11 @@ function dropshipping_product_import_in_db() {
                 $wc_product->set_slug(sanitize_title($product_slug));
                 $wc_product->set_description($product_description);
                 $wc_product->set_regular_price($product_price);
-                $wc_product->set_sale_price($product_merchant_price);
+                // Set sale price if discount
+                if ($dpi_discount_percentage > 0) {
+                    $product_discount_price = round($product_price - ($product_price * $dpi_discount_percentage / 100), 2);
+                    $wc_product->set_sale_price($product_discount_price);
+                }
                 $wc_product->set_status('publish');
                 $wc_product->set_catalog_visibility('visible');
                 $wc_product->set_stock_status($product_stock);
