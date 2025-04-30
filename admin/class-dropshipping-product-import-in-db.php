@@ -3,7 +3,8 @@ function dropshipping_product_import_in_db() {
     global $wpdb;
 
     $table_name = $wpdb->prefix . 'sync_dropshipping_product';
-    $dpi_import_limit = get_option('dpi_import_limit', 10);
+    $dpi_import_limit = get_option('dpi_import_limit', 1);
+    $dpi_discount_percentage = get_option('dpi_discount_percentage', 0);
     $results = [
         'success' => 0,
         'updated' => 0,
@@ -39,6 +40,8 @@ function dropshipping_product_import_in_db() {
             $product_slug = $product_data['slug'];
             $product_merchant_price = $product_data['sale_price'];
             $product_price = $product_data['price'];
+            // Product Discount Price
+            $product_discount_price = $product_price - ($product_price * $dpi_discount_percentage / 100);
             $product_description = $product_data['details'];
             $product_stock = ($product_data['status'] === 'active') ? 'instock' : 'outofstock';
             $product_variants = isset($product_data['product_variants']) ? $product_data['product_variants'] : [];
@@ -52,7 +55,18 @@ function dropshipping_product_import_in_db() {
                 // Update existing product (same as before)
                 $wc_product = wc_get_product($existing_product_id);
                 $wc_product->set_regular_price($product_price);
-                $wc_product->set_sale_price($product_merchant_price);
+                // Apply discount if percentage > 0
+                if ($dpi_discount_percentage > 0) {
+                    // Calculate the discounted price
+                    $product_discount_price = $product_price - ($product_price * $dpi_discount_percentage / 100);
+
+                    // Optionally round to 2 decimal places
+                    $product_discount_price = round($product_discount_price, 2);
+
+                    // Set the sale price for the product
+                    $wc_product->set_sale_price($product_discount_price);
+                }
+
                 $wc_product->set_stock_status($product_stock);
                 $product_id = $wc_product->save();
                 $results['updated']++;
@@ -62,78 +76,100 @@ function dropshipping_product_import_in_db() {
                 if (!empty($product_variants)) {
                     // Create variable product
                     $wc_product = new WC_Product_Variable();
-                    
+                    $wc_product->set_name($product_name); // Set name or title
+                    $wc_product->set_status('publish'); // Optional: set product status
+
                     // Extract all unique attributes
                     $size_options = [];
                     $color_options = [];
-                    
+
                     foreach ($product_variants as $variant) {
                         if ($variant['attribute'] === 'Size') {
-                            $size_options[] = $variant['variant'];
+                            $size_options[] = sanitize_title($variant['variant']); // Use slug
                         } elseif ($variant['attribute'] === 'Color') {
-                            $color_options[] = $variant['variant'];
+                            $color_options[] = sanitize_title($variant['variant']); // Use slug
                         }
                     }
-                    
+
+                    $attributes = [];
+
                     // Create Size attribute
                     if (!empty($size_options)) {
                         $size_attribute = new WC_Product_Attribute();
-                        $size_attribute->set_name('Size');
+                        $size_attribute->set_name('pa_size'); // Must use taxonomy slug
                         $size_attribute->set_options(array_unique($size_options));
                         $size_attribute->set_visible(true);
                         $size_attribute->set_variation(true);
+                        $attributes[] = $size_attribute;
                     }
-                    
+
                     // Create Color attribute
                     if (!empty($color_options)) {
                         $color_attribute = new WC_Product_Attribute();
-                        $color_attribute->set_name('Color');
+                        $color_attribute->set_name('pa_color'); // Must use taxonomy slug
                         $color_attribute->set_options(array_unique($color_options));
                         $color_attribute->set_visible(true);
                         $color_attribute->set_variation(true);
+                        $attributes[] = $color_attribute;
                     }
-                    
-                    // Set attributes to product
-                    $attributes = [];
-                    if (!empty($size_options)) $attributes[] = $size_attribute;
-                    if (!empty($color_options)) $attributes[] = $color_attribute;
+
+                    // Set attributes and save product
                     $wc_product->set_attributes($attributes);
-                    
-                    // Save product to get ID
                     $product_id = $wc_product->save();
-                    
-                    // Create variations for each combination
+
+                    // Make sure terms exist in taxonomy
+                    foreach ($size_options as $size_slug) {
+                        if (!term_exists($size_slug, 'pa_size')) {
+                            wp_insert_term(ucwords(str_replace('-', ' ', $size_slug)), 'pa_size', ['slug' => $size_slug]);
+                        }
+                    }
+                    foreach ($color_options as $color_slug) {
+                        if (!term_exists($color_slug, 'pa_color')) {
+                            wp_insert_term(ucwords(str_replace('-', ' ', $color_slug)), 'pa_color', ['slug' => $color_slug]);
+                        }
+                    }
+
+                    // Create variations
                     foreach ($product_variants as $variant) {
                         $variation = new WC_Product_Variation();
                         $variation->set_parent_id($product_id);
-                        
-                        // Set attributes
+
+                        // Set correct attribute keys
                         $variation_attributes = [];
+
                         if ($variant['attribute'] === 'Size') {
-                            $variation_attributes['pa_size'] = sanitize_title($variant['variant']);
+                            $variation_attributes['attribute_pa_size'] = sanitize_title($variant['variant']);
                         } elseif ($variant['attribute'] === 'Color') {
-                            $variation_attributes['pa_color'] = sanitize_title($variant['variant']);
+                            $variation_attributes['attribute_pa_color'] = sanitize_title($variant['variant']);
                         }
-                        
+
                         $variation->set_attributes($variation_attributes);
                         $variation->set_regular_price($product_price);
-                        $variation->set_sale_price($product_merchant_price);
+
+                        // Set sale price if discount
+                        if ($dpi_discount_percentage > 0) {
+                            $product_discount_price = round($product_price - ($product_price * $dpi_discount_percentage / 100), 2);
+                            $variation->set_sale_price($product_discount_price);
+                        }
+
                         $variation->set_stock_status($product_stock);
                         $variation->set_sku($product_code . '-' . strtolower($variant['variant']));
-                        
-                        // Set variation image if available
-                        if (isset($variant['image'])) {
-                            $image_id = upload_image_from_url($variant['image'], 
-                                "{$product_name} - {$variant['variant']}");
+
+                        // Set variation image
+                        if (!empty($variant['image'])) {
+                            $image_id = upload_image_from_url($variant['image'], "{$product_name} - {$variant['variant']}");
                             if ($image_id) {
                                 $variation->set_image_id($image_id);
                             }
                         }
-                        
+
                         $variation->save();
                     }
-                    
-                    $wc_product->variable_product_sync();
+
+                    // Sync variations
+                    WC_Product_Variable::sync($product_id);
+
+
                 } else {
                     // Create simple product (same as before)
                     $wc_product = new WC_Product_Simple();

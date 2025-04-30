@@ -39,7 +39,7 @@ class Dropshipping_Product_Importer_Settings {
         register_setting('dpi_settings_group', 'dpi_api_key');
         register_setting('dpi_settings_group', 'dpi_secret_key');
         register_setting('dpi_settings_group', 'dpi_import_limit');
-        register_setting('dpi_settings_group', 'dpi_profit_percentage');
+        register_setting('dpi_settings_group', 'dpi_discount_percentage');
 
         // API Key
         add_settings_section('dpi_main_section', 'Main Settings', null, 'dpi_settings_group');
@@ -47,7 +47,7 @@ class Dropshipping_Product_Importer_Settings {
         add_settings_field('dpi_api_key', 'API Key', array($this, 'dpi_api_key_field'), 'dpi_settings_group', 'dpi_main_section');
         add_settings_field('dpi_secret_key', 'Secret Key', array($this, 'dpi_secret_key_field'), 'dpi_settings_group', 'dpi_main_section');
         add_settings_field('dpi_import_limit', 'Product Import Limit (per minute)', array($this, 'dpi_import_limit_field'), 'dpi_settings_group', 'dpi_main_section');
-        add_settings_field('dpi_profit_percentage', 'Profit Percentage (%)', array($this, 'dpi_profit_percentage_field'), 'dpi_settings_group', 'dpi_main_section');
+        add_settings_field('dpi_discount_percentage', 'Set Product Discount (%)', array($this, 'dpi_discount_percentage_field'), 'dpi_settings_group', 'dpi_main_section');
     }
 
     // Fields:
@@ -67,8 +67,8 @@ class Dropshipping_Product_Importer_Settings {
         echo '<input type="number" name="dpi_import_limit" value="' . $value . '" class="small-text">';
     }
 
-    public function dpi_profit_percentage_field() {
-        $value = esc_attr(get_option('dpi_profit_percentage'));
-        echo '<input type="number" step="0.01" name="dpi_profit_percentage" value="' . $value . '" class="small-text"> %';
+    public function dpi_discount_percentage_field() {
+        $value = esc_attr(get_option('dpi_discount_percentage'));
+        echo '<input type="number" step="0.01" name="dpi_discount_percentage" value="' . $value . '" class="small-text"> %';
     }
 }
