@@ -38,6 +38,9 @@ function insert_product_to_database() {
   global $wpdb;
   $table_name = $wpdb->prefix . 'sync_dropshipping_product';
 
+   // ✅ Optional: Clear table before inserting new data
+   $wpdb->query("TRUNCATE TABLE $table_name");
+
   $current_page = 1;
   $last_page = 1; // Temporary, will update after first call
 
