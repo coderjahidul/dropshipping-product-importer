@@ -142,10 +142,11 @@ function dropshipping_product_import_in_db() {
                         $variation->set_regular_price($product_price);
 
                         // Set sale price if discount
-                        if ($dpi_discount_percentage > 0) {
-                            $product_discount_price = round($product_price - ($product_price * $dpi_discount_percentage / 100), 2);
+                        if ((float) get_option('dpi_discount_percentage', 0) > 0) {
+                            $product_discount_price = get_discounted_price($product_price);
                             $variation->set_sale_price($product_discount_price);
                         }
+
 
                         $variation->set_stock_status($product_stock);
                         $variation->set_sku($product_code . '-' . strtolower($variant['variant']));
@@ -176,11 +177,13 @@ function dropshipping_product_import_in_db() {
                 $wc_product->set_slug(sanitize_title($product_slug));
                 $wc_product->set_description($product_description);
                 $wc_product->set_regular_price($product_price);
+
                 // Set sale price if discount
-                if ($dpi_discount_percentage > 0) {
-                    $product_discount_price = round($product_price - ($product_price * $dpi_discount_percentage / 100), 2);
+                if ((float) get_option('dpi_discount_percentage', 0) > 0) {
+                    $product_discount_price = get_discounted_price($product_price);
                     $wc_product->set_sale_price($product_discount_price);
                 }
+
                 $wc_product->set_status('publish');
                 $wc_product->set_catalog_visibility('visible');
                 $wc_product->set_stock_status($product_stock);
@@ -252,6 +255,18 @@ function dropshipping_product_import_in_db() {
 
     return $results;
 }
+
+// Get discounted price
+function get_discounted_price($price) {
+    $discount_percentage = (float) get_option('dpi_discount_percentage', 0);
+    $price = (float) $price;
+
+    // Clamp discount percentage between 0 and 100
+    $discount_percentage = max(0, min(100, $discount_percentage));
+
+    return round($price - ($price * $discount_percentage / 100), 2);
+}
+
 
 /**
  * Upload image from URL helper function
