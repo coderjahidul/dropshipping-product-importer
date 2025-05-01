@@ -91,7 +91,7 @@ function dropshipping_product_import_in_db() {
                     // Create Size attribute
                     if (!empty($size_options)) {
                         $size_attribute = new WC_Product_Attribute();
-                        $size_attribute->set_name('pa_size'); // Must use taxonomy slug
+                        $size_attribute->set_name('Size'); // Must use taxonomy slug
                         $size_attribute->set_options(array_unique($size_options));
                         $size_attribute->set_visible(true);
                         $size_attribute->set_variation(true);
@@ -101,7 +101,7 @@ function dropshipping_product_import_in_db() {
                     // Create Color attribute
                     if (!empty($color_options)) {
                         $color_attribute = new WC_Product_Attribute();
-                        $color_attribute->set_name('pa_color'); // Must use taxonomy slug
+                        $color_attribute->set_name('Color'); // Must use taxonomy slug
                         $color_attribute->set_options(array_unique($color_options));
                         $color_attribute->set_visible(true);
                         $color_attribute->set_variation(true);
@@ -114,13 +114,13 @@ function dropshipping_product_import_in_db() {
 
                     // Make sure terms exist in taxonomy
                     foreach ($size_options as $size_slug) {
-                        if (!term_exists($size_slug, 'pa_size')) {
-                            wp_insert_term(ucwords(str_replace('-', ' ', $size_slug)), 'pa_size', ['slug' => $size_slug]);
+                        if (!term_exists($size_slug, 'size')) {
+                            wp_insert_term(ucwords(str_replace('-', ' ', $size_slug)), 'size', ['slug' => $size_slug]);
                         }
                     }
                     foreach ($color_options as $color_slug) {
-                        if (!term_exists($color_slug, 'pa_color')) {
-                            wp_insert_term(ucwords(str_replace('-', ' ', $color_slug)), 'pa_color', ['slug' => $color_slug]);
+                        if (!term_exists($color_slug, 'color')) {
+                            wp_insert_term(ucwords(str_replace('-', ' ', $color_slug)), 'color', ['slug' => $color_slug]);
                         }
                     }
 
@@ -133,9 +133,9 @@ function dropshipping_product_import_in_db() {
                         $variation_attributes = [];
 
                         if ($variant['attribute'] === 'Size') {
-                            $variation_attributes['attribute_pa_size'] = sanitize_title($variant['variant']);
+                            $variation_attributes['size'] = sanitize_title($variant['variant']);
                         } elseif ($variant['attribute'] === 'Color') {
-                            $variation_attributes['attribute_pa_color'] = sanitize_title($variant['variant']);
+                            $variation_attributes['size'] = sanitize_title($variant['variant']);
                         }
 
                         $variation->set_attributes($variation_attributes);
