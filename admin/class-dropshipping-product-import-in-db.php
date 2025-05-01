@@ -198,22 +198,34 @@ function dropshipping_product_import_in_db() {
                 }
                 $wc_product->set_category_ids($category_ids);
 
-                // Handle images
+                // Get watermark logo URL from settings
+                $watermark_url = get_option('dpi_product_watermark_logo');
+
+                // Handle featured image
                 if (!empty($product_image_url)) {
-                    $image_id = upload_image_from_url($product_image_url, $product_name);
+                    $image_id = !empty($watermark_url)
+                        ? upload_image_with_watermark_url($product_image_url, $product_name, $watermark_url)
+                        : upload_image_from_url($product_image_url, $product_name);
+
                     if ($image_id) {
                         $wc_product->set_image_id($image_id); // Set as thumbnail only
                     }
                 }
 
+                // Handle gallery images
                 if (!empty($product_gallery_images)) {
                     $gallery_ids = [];
+
                     foreach ($product_gallery_images as $gallery_image) {
-                        $gallery_image_id = upload_image_from_url($gallery_image['product_image'], "{$product_name} - Gallery");
+                        $gallery_image_id = !empty($watermark_url)
+                            ? upload_image_with_watermark_url($gallery_image['product_image'], "{$product_name} - Gallery", $watermark_url)
+                            : upload_image_from_url($gallery_image['product_image'], "{$product_name} - Gallery");
+
                         if ($gallery_image_id) {
                             $gallery_ids[] = $gallery_image_id;
                         }
                     }
+
                     $wc_product->set_gallery_image_ids($gallery_ids);
                 }
 
@@ -273,3 +285,85 @@ function upload_image_from_url($image_url, $image_name) {
     
     return $id;
 }
+
+function upload_image_with_watermark_url($image_url, $image_name, $watermark_url) {
+    require_once(ABSPATH . 'wp-admin/includes/image.php');
+    require_once(ABSPATH . 'wp-admin/includes/file.php');
+    require_once(ABSPATH . 'wp-admin/includes/media.php');
+
+    $image_name = sanitize_file_name($image_name);
+    $tmp = download_url($image_url);
+
+    if (is_wp_error($tmp)) {
+        error_log("Image download failed: " . $tmp->get_error_message());
+        return false;
+    }
+
+    $source = imagecreatefromstring(file_get_contents($tmp));
+    if (!$source) {
+        @unlink($tmp);
+        error_log("Failed to create image from product image URL.");
+        return false;
+    }
+
+    // Download watermark logo from URL
+    $watermark_tmp = download_url($watermark_url);
+    if (is_wp_error($watermark_tmp)) {
+        @unlink($tmp);
+        error_log("Failed to download watermark image: " . $watermark_tmp->get_error_message());
+        return false;
+    }
+
+    $watermark = imagecreatefromstring(file_get_contents($watermark_tmp));
+    if (!$watermark) {
+        @unlink($tmp);
+        @unlink($watermark_tmp);
+        error_log("Failed to create image from watermark URL.");
+        return false;
+    }
+
+    imagealphablending($watermark, true);
+    imagesavealpha($watermark, true);
+
+    // Get sizes
+    $source_width = imagesx($source);
+    $source_height = imagesy($source);
+    $wm_width = imagesx($watermark);
+    $wm_height = imagesy($watermark);
+
+    // Position watermark (Top right)
+    $dest_x = $source_width - $wm_width - 20;
+    $dest_y = 20;
+
+    // Merge
+    imagecopy($source, $watermark, $dest_x, $dest_y, 0, 0, $wm_width, $wm_height);
+
+    // Save to temp file
+    $watermarked_tmp = tempnam(sys_get_temp_dir(), 'wm_') . '.jpg';
+    imagejpeg($source, $watermarked_tmp, 90);
+
+    // Clean up
+    imagedestroy($source);
+    imagedestroy($watermark);
+    @unlink($tmp);
+    @unlink($watermark_tmp);
+
+    // Prepare for sideload
+    $file_array = [
+        'name' => $image_name . '.jpg',
+        'tmp_name' => $watermarked_tmp,
+    ];
+
+    // Upload
+    $id = media_handle_sideload($file_array, 0);
+
+    @unlink($file_array['tmp_name']);
+
+    if (is_wp_error($id)) {
+        error_log("Image upload failed: " . $id->get_error_message());
+        return false;
+    }
+
+    return $id;
+}
+
