@@ -199,25 +199,24 @@ function dropshipping_product_import_in_db() {
                 $wc_product->set_category_ids($category_ids);
 
                 // Handle images
-                $image_ids = [];
                 if (!empty($product_image_url)) {
                     $image_id = upload_image_from_url($product_image_url, $product_name);
                     if ($image_id) {
-                        $image_ids[] = $image_id;
-                        $wc_product->set_image_id($image_id);
+                        $wc_product->set_image_id($image_id); // Set as thumbnail only
                     }
                 }
-                
+
                 if (!empty($product_gallery_images)) {
+                    $gallery_ids = [];
                     foreach ($product_gallery_images as $gallery_image) {
-                        $gallery_image_id = upload_image_from_url($gallery_image['product_image'], 
-                            "{$product_name} - Gallery");
+                        $gallery_image_id = upload_image_from_url($gallery_image['product_image'], "{$product_name} - Gallery");
                         if ($gallery_image_id) {
-                            $image_ids[] = $gallery_image_id;
+                            $gallery_ids[] = $gallery_image_id;
                         }
                     }
-                    $wc_product->set_gallery_image_ids($image_ids);
+                    $wc_product->set_gallery_image_ids($gallery_ids);
                 }
+
 
                 $product_id = $wc_product->save();
                 $results['success']++;
