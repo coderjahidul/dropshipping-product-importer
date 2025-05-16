@@ -4,7 +4,6 @@ function dropshipping_product_import_in_db() {
 
     $table_name = $wpdb->prefix . 'sync_dropshipping_product';
     $dpi_import_limit = get_option('dpi_import_limit', 1);
-    $dpi_discount_percentage = get_option('dpi_discount_percentage', 0);
     $results = [
         'success' => 0,
         'updated' => 0,
@@ -40,8 +39,6 @@ function dropshipping_product_import_in_db() {
             $product_slug = $product_data['slug'];
             $product_merchant_price = $product_data['sale_price'];
             $product_price = $product_data['price'];
-            // Product Discount Price
-            $product_discount_price = $product_price - ($product_price * $dpi_discount_percentage / 100);
             $product_description = $product_data['details'];
             $product_stock = ($product_data['status'] === 'active') ? 'instock' : 'outofstock';
             $product_variants = isset($product_data['product_variants']) ? $product_data['product_variants'] : [];
@@ -57,8 +54,8 @@ function dropshipping_product_import_in_db() {
                 $wc_product->set_regular_price($product_price);
 
                 // Set sale price if discount
-                if ($dpi_discount_percentage > 0) {
-                    $product_discount_price = round($product_price - ($product_price * $dpi_discount_percentage / 100), 2);
+                if ((float) get_option('dpi_discount_percentage', 0) > 0) {
+                    $product_discount_price = get_discounted_price($product_price);
                     $wc_product->set_sale_price($product_discount_price);
                 }
 
