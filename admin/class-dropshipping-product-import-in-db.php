@@ -49,18 +49,53 @@ function dropshipping_product_import_in_db() {
             $existing_product_id = wc_get_product_id_by_sku($product_code);
             
             if ($existing_product_id) {
-                // Update existing product (same as before)
+                // Get the product object
                 $wc_product = wc_get_product($existing_product_id);
+            
+                // Global product update (for simple products)
                 $wc_product->set_regular_price($product_price);
-
-                // Set sale price if discount
+            
                 if ((float) get_option('dpi_discount_percentage', 0) > 0) {
                     $product_discount_price = get_discounted_price($product_price);
                     $wc_product->set_sale_price($product_discount_price);
+                }else{
+                    // delete sale price
+                    $wc_product->set_sale_price('');
                 }
-
+            
                 $wc_product->set_stock_status($product_stock);
+            
+                // Check if it's a variable product
+                if ($wc_product instanceof WC_Product_Variable) {
+                    // Get all variation IDs
+                    $variation_ids = $wc_product->get_children();
+            
+                    foreach ($variation_ids as $variation_id) {
+                        $variation = new WC_Product_Variation($variation_id);
+            
+                        // Update variation regular price
+                        $variation->set_regular_price($product_price);
+            
+                        // Update sale price if discount applies
+                        if ((float) get_option('dpi_discount_percentage', 0) > 0) {
+                            $variation_discount_price = get_discounted_price($product_price);
+                            $variation->set_sale_price($variation_discount_price);
+                        }else{
+                            // delete sale price
+                            $variation->set_sale_price('');
+                        }
+            
+                        // Optional: update stock status for variations if needed
+                        $variation->set_stock_status($product_stock);
+            
+                        $variation->save();
+                    }
+                }
+            
+                // Save the main product
                 $product_id = $wc_product->save();
+            
+                // Report success
                 $results['updated']++;
                 $results['messages'][] = "Product {$product_code}: Updated successfully";
             } else {
