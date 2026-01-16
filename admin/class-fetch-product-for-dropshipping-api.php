@@ -69,6 +69,7 @@ function insert_product_to_database() {
 
       foreach ($products as $product) {
           $product_code = isset($product['product_code']) ? intval($product['product_code']) : 0;
+          $product_category = isset($product['category']) ? $product['category'] : '';
           $status = "pending";
           $value = wp_json_encode($product); // Convert to JSON
           $current_time = current_time('mysql');
@@ -82,13 +83,14 @@ function insert_product_to_database() {
               $table_name,
               array(
                   'product_code' => $product_code,
+                  'category_name' => $product_category,
                   'status'       => $status,
                   'value'        => $value,
                   'created_at'   => $current_time,
                   'updated_at'   => $current_time
               ),
               array(
-                  '%d', '%s', '%s', '%s', '%s'
+                  '%d', '%s', '%s', '%s', '%s', '%s'
               )
           );
       }

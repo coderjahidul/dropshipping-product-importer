@@ -37,6 +37,7 @@ class Dropshipping_Product_Importer_Activator {
 		$sql = "CREATE TABLE IF NOT EXISTS " . $table_name . " (
 			id INT AUTO_INCREMENT,
             product_code INT NOT NULL,
+			category_name varchar(255) NOT NULL,
             status varchar(255) NOT NULL,
             value text NOT NULL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

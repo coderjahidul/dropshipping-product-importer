@@ -9,10 +9,14 @@ function dropshipping_api_endpoints() {
 
     register_rest_route( 'dropshipping/v1', '/import_product', array(
         'methods' => 'GET',
-        'callback' => 'dropshipping_product_import_in_db',
+        'callback' => 'call_import_product',
     ));
 }
 
 function call_fetch_product() {
     return insert_product_to_database();
+}
+
+function call_import_product() {
+    return dropshipping_product_import_in_db();
 }

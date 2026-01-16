@@ -7,7 +7,7 @@
  * public-facing side of the site and the admin area.
  *
  * @link       https://https://github.com/coderjahidul/
- * @since      1.0.0
+ * @since      1.1.0
  *
  * @package    Dropshipping_Product_Importer
  * @subpackage Dropshipping_Product_Importer/includes
@@ -22,7 +22,7 @@
  * Also maintains the unique identifier of this plugin as well as the current
  * version of the plugin.
  *
- * @since      1.0.0
+ * @since      1.1.0
  * @package    Dropshipping_Product_Importer
  * @subpackage Dropshipping_Product_Importer/includes
  * @author     Jahidul islam Sabuz <sobuz0349@gmail.com>
@@ -33,7 +33,7 @@ class Dropshipping_Product_Importer {
 	 * The loader that's responsible for maintaining and registering all hooks that power
 	 * the plugin.
 	 *
-	 * @since    1.0.0
+	 * @since    1.1.0
 	 * @access   protected
 	 * @var      Dropshipping_Product_Importer_Loader    $loader    Maintains and registers all hooks for the plugin.
 	 */
@@ -42,7 +42,7 @@ class Dropshipping_Product_Importer {
 	/**
 	 * The unique identifier of this plugin.
 	 *
-	 * @since    1.0.0
+	 * @since    1.1.0
 	 * @access   protected
 	 * @var      string    $plugin_name    The string used to uniquely identify this plugin.
 	 */
@@ -51,7 +51,7 @@ class Dropshipping_Product_Importer {
 	/**
 	 * The current version of the plugin.
 	 *
-	 * @since    1.0.0
+	 * @since    1.1.0
 	 * @access   protected
 	 * @var      string    $version    The current version of the plugin.
 	 */
@@ -64,13 +64,13 @@ class Dropshipping_Product_Importer {
 	 * Load the dependencies, define the locale, and set the hooks for the admin area and
 	 * the public-facing side of the site.
 	 *
-	 * @since    1.0.0
+	 * @since    1.1.0
 	 */
 	public function __construct() {
 		if ( defined( 'DROPSHIPPING_PRODUCT_IMPORTER_VERSION' ) ) {
 			$this->version = DROPSHIPPING_PRODUCT_IMPORTER_VERSION;
 		} else {
-			$this->version = '1.0.0';
+			$this->version = '1.1.0';
 		}
 		$this->plugin_name = 'dropshipping-product-importer';
 
@@ -95,7 +95,7 @@ class Dropshipping_Product_Importer {
 	 * Create an instance of the loader which will be used to register the hooks
 	 * with WordPress.
 	 *
-	 * @since    1.0.0
+	 * @since    1.1.0
 	 * @access   private
 	 */
 	private function load_dependencies() {
@@ -153,7 +153,7 @@ class Dropshipping_Product_Importer {
 	 * Uses the Dropshipping_Product_Importer_i18n class in order to set the domain and to register the hook
 	 * with WordPress.
 	 *
-	 * @since    1.0.0
+	 * @since    1.1.0
 	 * @access   private
 	 */
 	private function set_locale() {
@@ -168,7 +168,7 @@ class Dropshipping_Product_Importer {
 	 * Register all of the hooks related to the admin area functionality
 	 * of the plugin.
 	 *
-	 * @since    1.0.0
+	 * @since    1.1.0
 	 * @access   private
 	 */
 	private function define_admin_hooks() {
@@ -183,7 +183,7 @@ class Dropshipping_Product_Importer {
 	/**
 	 * Register all of the hooks related to the settings page functionality.
 	 *
-	 * @since    1.0.0
+	 * @since    1.1.0
 	 * @access   private
 	 */
 	private function define_settings_hooks() {
@@ -200,7 +200,7 @@ class Dropshipping_Product_Importer {
 	 * Register all of the hooks related to the public-facing functionality
 	 * of the plugin.
 	 *
-	 * @since    1.0.0
+	 * @since    1.1.0
 	 * @access   private
 	 */
 	private function define_public_hooks() {
@@ -215,7 +215,7 @@ class Dropshipping_Product_Importer {
 	/**
 	 * Run the loader to execute all of the hooks with WordPress.
 	 *
-	 * @since    1.0.0
+	 * @since    1.1.0
 	 */
 	public function run() {
 		$this->loader->run();

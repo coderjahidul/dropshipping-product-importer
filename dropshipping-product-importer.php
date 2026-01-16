@@ -16,7 +16,7 @@
  * Plugin Name:       Dropshipping Product Importer
  * Plugin URI:        https://https://github.com/coderjahidul/dropshipping-product-importer
  * Description:       Import products directly from dropshipping.com.bd into your WordPress WooCommerce store. Save time and grow your dropshipping business effortlessly.
- * Version:           1.0.0
+ * Version:           1.1.0
  * Author:            Jahidul islam Sabuz
  * Author URI:        https://https://github.com/coderjahidul//
  * License:           GPL-2.0+

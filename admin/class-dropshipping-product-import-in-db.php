@@ -4,6 +4,7 @@ function dropshipping_product_import_in_db() {
 
     $table_name = $wpdb->prefix . 'sync_dropshipping_product';
     $dpi_import_limit = get_option('dpi_import_limit', 1);
+    $selected_category = get_option('dpi_selected_category', '');
     $results = [
         'success' => 0,
         'updated' => 0,
@@ -12,8 +13,13 @@ function dropshipping_product_import_in_db() {
         'messages' => []
     ];
 
+    $where_clause = "status = 'pending'";
+    if (!empty($selected_category)) {
+        $where_clause .= $wpdb->prepare(" AND category_name = %s", $selected_category);
+    }
+
     $products = $wpdb->get_results(
-        "SELECT id, value FROM $table_name WHERE status = 'pending' ORDER BY id ASC LIMIT $dpi_import_limit"
+        "SELECT id, value FROM $table_name WHERE $where_clause ORDER BY id ASC LIMIT $dpi_import_limit"
     );
 
     if (empty($products)) {
@@ -412,5 +418,17 @@ function upload_image_with_watermark_url($image_url, $image_name, $watermark_url
     }
 
     return $id;
+}
+
+/**
+ * Get unique categories from the sync table
+ */
+function get_dpi_unique_categories() {
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'sync_dropshipping_product';
+    
+    $categories = $wpdb->get_col("SELECT DISTINCT category_name FROM $table_name WHERE category_name != '' ORDER BY category_name ASC");
+    
+    return $categories;
 }
 
