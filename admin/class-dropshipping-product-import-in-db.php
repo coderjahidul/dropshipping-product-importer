@@ -13,14 +13,26 @@ function dropshipping_product_import_in_db() {
         'messages' => []
     ];
 
-    $where_clause = "status = 'pending'";
+    $query = "SELECT id, value FROM $table_name WHERE status = 'pending'";
+    $query_args = [];
+
     if (!empty($selected_category)) {
-        $where_clause .= $wpdb->prepare(" AND category_name = %s", $selected_category);
+        if (is_array($selected_category)) {
+            if (!in_array('all', $selected_category)) {
+                $placeholders = array_fill(0, count($selected_category), '%s');
+                $query .= " AND category_name IN (" . implode(', ', $placeholders) . ")";
+                $query_args = array_merge($query_args, $selected_category);
+            }
+        } else if ($selected_category !== 'all') {
+            $query .= " AND category_name = %s";
+            $query_args[] = $selected_category;
+        }
     }
 
-    $products = $wpdb->get_results(
-        "SELECT id, value FROM $table_name WHERE $where_clause ORDER BY id ASC LIMIT $dpi_import_limit"
-    );
+    $query .= " ORDER BY id ASC LIMIT %d";
+    $query_args[] = (int) $dpi_import_limit;
+
+    $products = $wpdb->get_results($wpdb->prepare($query, $query_args));
 
     if (empty($products)) {
         $results['messages'][] = "No pending products found.";

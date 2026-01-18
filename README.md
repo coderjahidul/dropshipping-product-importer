@@ -1,7 +1,7 @@
 # Dropshipping Product Importer
 
 [![WordPress Plugin](https://img.shields.io/badge/WordPress-Plugin-blue.svg)](https://wordpress.org/plugins/dropshipping-product-importer/)
-[![Version](https://img.shields.io/badge/Version-1.1.0-green.svg)](https://github.com/coderjahidul/dropshipping-product-importer)
+[![Version](https://img.shields.io/badge/Version-1.2.0-green.svg)](https://github.com/coderjahidul/dropshipping-product-importer)
 [![License](https://img.shields.io/badge/License-GPLv2-orange.svg)](LICENSE.txt)
 
 **Dropshipping Product Importer** is a powerful WordPress plugin designed to streamline the workflow for dropshipping businesses. It allows you to sync products from [dropshipping.com.bd](https://dropshipping.com.bd) into a local staging table and selectively import them into your WooCommerce store with full category control.
@@ -9,7 +9,7 @@
 ## 🚀 Features
 
 - **Local Staging Table**: Sync products to a local database table (`wp_sync_dropshipping_product`) to review before importing to WooCommerce.
-- **Category-wise Import**: Select specific categories to import, allowing for targeted product management.
+- **Multi-Category Import**: Select multiple categories or use the "Select All" feature for bulk processing.
 - **REST API Integration**: Trigger fetch and import operations via standard WordPress REST API endpoints.
 - **One-Click Copy**: Easily copy API endpoints from the admin settings page for use in external automation (CRON jobs, etc.).
 - **Automatic Sync**: Seamlessly creates or updates products, handles images, categories, and attributes.
@@ -34,7 +34,7 @@ The plugin exposes the following endpoints for automation:
 `GET /wp-json/dropshipping/v1/import_product?category=Jewelry`
 - **Description**: Imports products from the local staging table into WooCommerce.
 - **Parameters**:
-  - `category` (Optional): Filter by a specific category name. If omitted, it uses the category selected in the plugin settings.
+  - `category` (Optional): Filter by a specific category name. If omitted, it uses the multiple categories selected in the plugin settings.
 
 ## ⚙️ Configuration
 
@@ -42,7 +42,7 @@ In the admin settings page, you can:
 - Set your **API Key** and **Secret Key**.
 - Define an **Import Limit** per batch.
 - Set a **Discount Percentage** to apply to imported product prices.
-- Select a **Default Category** for imports.
+- Select **Multiple Categories** for targeted imports with batch selection support.
 
 ## 📝 License
 

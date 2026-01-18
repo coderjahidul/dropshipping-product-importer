@@ -96,13 +96,35 @@ class Dropshipping_Product_Importer_Settings {
     public function dpi_selected_category_field() {
         $categories = get_dpi_unique_categories();
         $selected = get_option('dpi_selected_category');
+        if (!is_array($selected)) {
+            $selected = $selected ? (array) $selected : [];
+        }
         
-        echo '<select name="dpi_selected_category" id="dpi_selected_category">';
-        echo '<option value="">-- Select Category --</option>';
+        echo '<div style="margin-bottom: 10px;">';
+        echo '<button type="button" class="button button-secondary" id="dpi_select_all_categories">Select All</button> ';
+        echo '<button type="button" class="button button-secondary" id="dpi_deselect_all_categories">Deselect All</button>';
+        echo '</div>';
+
+        echo '<select name="dpi_selected_category[]" id="dpi_selected_category" multiple style="height: 200px; width: 300px;">';
+        echo '<option value="all" ' . (in_array('all', $selected) ? 'selected' : '') . '>All Products</option>';
         foreach ($categories as $category) {
-            echo '<option value="' . esc_attr($category) . '" ' . selected($selected, $category, false) . '>' . esc_html($category) . '</option>';
+            echo '<option value="' . esc_attr($category) . '" ' . (in_array($category, $selected) ? 'selected' : '') . '>' . esc_html($category) . '</option>';
         }
         echo '</select>';
+        echo '<p class="description">Hold Ctrl (Windows) or Command (Mac) to select multiple categories.</p>';
+
+        ?>
+        <script type="text/javascript">
+        jQuery(document).ready(function($) {
+            $('#dpi_select_all_categories').on('click', function() {
+                $('#dpi_selected_category option').prop('selected', true);
+            });
+            $('#dpi_deselect_all_categories').on('click', function() {
+                $('#dpi_selected_category option').prop('selected', false);
+            });
+        });
+        </script>
+        <?php
     }
 
     public function dpi_endpoints_section_info() {

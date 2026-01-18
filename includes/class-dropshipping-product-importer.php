@@ -70,7 +70,7 @@ class Dropshipping_Product_Importer {
 		if ( defined( 'DROPSHIPPING_PRODUCT_IMPORTER_VERSION' ) ) {
 			$this->version = DROPSHIPPING_PRODUCT_IMPORTER_VERSION;
 		} else {
-			$this->version = '1.1.0';
+			$this->version = '1.2.0';
 		}
 		$this->plugin_name = 'dropshipping-product-importer';
 

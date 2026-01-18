@@ -4,7 +4,7 @@ Donate link: https://github.com/coderjahidul/
 Tags: dropshipping, woocommerce, product import, automation
 Requires at least: 5.0
 Tested up to: 6.4
-Stable tag: 1.1.0
+Stable tag: 1.2.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -18,11 +18,12 @@ The latest version introduces category-wise import capabilities and robust REST 
 
 == Features ==
 
-*   **Category-wise Import**: Select specific categories from your synced products to import into WooCommerce.
+*   **Multi-Category Import**: Select multiple categories or use "Select All" to batch import products.
 *   **REST API Integration**: Trigger product fetching and importing via standard WordPress REST API endpoints.
 *   **One-Click Copy**: Easily copy API endpoints from the settings page for use in external automation tools.
 *   **Local Staging Table**: Sync products to a local database table (`wp_sync_dropshipping_product`) before importing to WooCommerce.
 *   **WooCommerce Sync**: Seamlessly creates or updates products, handles images, categories, and attributes.
+*   **Automatic Attributes**: Automatically creates and assigns product attributes like Size and Color.
 
 == Installation ==
 
@@ -38,9 +39,14 @@ The plugin provides the following API endpoints:
 *   **Fetch Products**: `GET /wp-json/dropshipping/v1/fetch_product`
     Syncs products from the external API to your local staging table.
 *   **Import Products**: `GET /wp-json/dropshipping/v1/import_product`
-    Imports products from the local staging table to WooCommerce. Uses the category selected in settings for filtering.
+    Imports products from the local staging table to WooCommerce. Uses the categories selected in settings for filtering.
 
 == Changelog ==
+
+= 1.2.0 =
+* Added Multi-Category product import functionality.
+* Added "Select All" and "Deselect All" options for easier category management.
+* Refactored SQL query generation for improved performance and security.
 
 = 1.1.0 =
 * Added Category-wise product import functionality.
