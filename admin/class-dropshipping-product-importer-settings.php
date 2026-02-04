@@ -21,7 +21,7 @@ class Dropshipping_Product_Importer_Settings {
 
     public function create_admin_page() {
         ?>
-        <div class="wrap">
+        <div class="wrap dpi-dashboard-wrapper">
             <h1>Product Importer Settings</h1>
             <form method="post" action="options.php" enctype="multipart/form-data">
                 <?php

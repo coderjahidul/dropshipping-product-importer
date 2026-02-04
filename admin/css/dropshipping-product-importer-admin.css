@@ -1,0 +1,159 @@
+/* Main Dashboard Wrapper */
+.dpi-dashboard-wrapper {
+    background: #fff;
+    padding: 20px 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    margin-top: 20px;
+    margin-right: 20px;
+    max-width: 1200px;
+}
+
+/* Headings */
+.dpi-dashboard-wrapper h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1e1e1e;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #f0f0f1;
+}
+
+.dpi-dashboard-wrapper h2 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #333;
+    margin-top: 30px;
+    margin-bottom: 15px;
+}
+
+/* Form Tables */
+.dpi-dashboard-wrapper .form-table {
+    margin-top: 0;
+}
+
+.dpi-dashboard-wrapper .form-table th {
+    font-weight: 600;
+    color: #555;
+    padding: 25px 10px 25px 0;
+    width: 250px;
+}
+
+.dpi-dashboard-wrapper .form-table td {
+    padding: 20px 10px;
+}
+
+/* Input Fields */
+.dpi-dashboard-wrapper input[type="text"],
+.dpi-dashboard-wrapper input[type="password"],
+.dpi-dashboard-wrapper input[type="number"],
+.dpi-dashboard-wrapper input[type="url"],
+.dpi-dashboard-wrapper input[type="email"],
+.dpi-dashboard-wrapper select,
+.dpi-dashboard-wrapper textarea {
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 10px 12px;
+    font-size: 14px;
+    width: 100%;
+    max-width: 500px;
+    box-shadow: none;
+    transition: all 0.2s ease;
+    background-color: #fcfcfc;
+}
+
+.dpi-dashboard-wrapper input:focus,
+.dpi-dashboard-wrapper select:focus,
+.dpi-dashboard-wrapper textarea:focus {
+    border-color: #2271b1;
+    box-shadow: 0 0 0 1px #2271b1;
+    background-color: #fff;
+}
+
+/* Specific Inputs */
+.dpi-dashboard-wrapper input.small-text {
+    width: 100px;
+}
+
+.dpi-dashboard-wrapper input[readonly] {
+    background-color: #f0f0f1 !important;
+    color: #666;
+    cursor: default;
+}
+
+/* Buttons */
+.dpi-dashboard-wrapper .button.button-primary {
+    background: #2271b1;
+    border-color: #2271b1;
+    padding: 8px 25px;
+    font-size: 15px;
+    font-weight: 600;
+    height: auto;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.dpi-dashboard-wrapper .button.button-primary:hover {
+    background: #135e96;
+    border-color: #135e96;
+}
+
+.dpi-dashboard-wrapper .button.button-secondary {
+    border-color: #dcdcde;
+    color: #2271b1;
+    background: #f6f7f7;
+    border-radius: 5px;
+    transition: all 0.2s ease;
+}
+
+.dpi-dashboard-wrapper .button.button-secondary:hover {
+    background: #f0f0f1;
+    border-color: #c3c4c7;
+    color: #135e96;
+}
+
+/* Category Selection Area */
+.dpi-dashboard-wrapper select[multiple] {
+    height: auto !important;
+    min-height: 200px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 5px;
+}
+
+.dpi-dashboard-wrapper #dpi_selected_category option {
+    padding: 8px 12px;
+    border-bottom: 1px solid #f0f0f1;
+    cursor: pointer;
+}
+
+.dpi-dashboard-wrapper #dpi_selected_category option:last-child {
+    border-bottom: none;
+}
+
+.dpi-dashboard-wrapper #dpi_selected_category option:checked {
+    background-color: #e5f5fa;
+    color: #135e96;
+    font-weight: 500;
+}
+
+/* Copy Button Group */
+.dpi-dashboard-wrapper .dpi-copy-btn {
+    height: 38px; /* Match input height */
+    line-height: normal;
+}
+
+/* Descriptions */
+.dpi-dashboard-wrapper p.description {
+    font-style: normal;
+    color: #646970;
+    margin-top: 8px;
+}
+
+/* Settings Sections */
+.dpi-dashboard-wrapper h3 {
+    font-size: 18px;
+    margin-top: 2em;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eaeaea;
+}

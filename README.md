@@ -1,13 +1,14 @@
 # Dropshipping Product Importer
 
 [![WordPress Plugin](https://img.shields.io/badge/WordPress-Plugin-blue.svg)](https://wordpress.org/plugins/dropshipping-product-importer/)
-[![Version](https://img.shields.io/badge/Version-1.2.0-green.svg)](https://github.com/coderjahidul/dropshipping-product-importer)
+[![Version](https://img.shields.io/badge/Version-1.3.0-green.svg)](https://github.com/coderjahidul/dropshipping-product-importer)
 [![License](https://img.shields.io/badge/License-GPLv2-orange.svg)](LICENSE.txt)
 
 **Dropshipping Product Importer** is a powerful WordPress plugin designed to streamline the workflow for dropshipping businesses. It allows you to sync products from [dropshipping.com.bd](https://dropshipping.com.bd) into a local staging table and selectively import them into your WooCommerce store with full category control.
 
 ## 🚀 Features
 
+- **Modern Admin UI**: A beautiful, responsive, and user-friendly dashboard for managing imports.
 - **Local Staging Table**: Sync products to a local database table (`wp_sync_dropshipping_product`) to review before importing to WooCommerce.
 - **Multi-Category Import**: Select multiple categories or use the "Select All" feature for bulk processing.
 - **REST API Integration**: Trigger fetch and import operations via standard WordPress REST API endpoints.
